@@ -39,6 +39,12 @@ and if necessary, write 2 or more letters if your initials are too similar to so
 Only use comments if the code is hard to read or if it's not clear at first glance what something is
 meant to do.
 
+However, feel free to be clever and witty with some comments and observations, 
+as they make code more enjoyable to read and boost a tired programmers morale.
+If you think code you made was bad, make it better. But if you can't, feel free to express
+your dissatisfaction / frustration in a comment.
+But please don't go overboard with these, or it can get cluttered.
+
 If the function name doesn't tell you what it does, either name it better or comment above
 what it's purpose is.
 

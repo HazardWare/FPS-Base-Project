@@ -2,8 +2,9 @@ class_name PlayerController3D extends CharacterBody3D
 
 @export var debug : bool = false
 
-@export_category("Node References")
-@export var camera : CameraController
+@export_group("Node References")
+@export var camera_controller : CameraController
+@export var camera : CameraEffects
 @export var state_chart : StateChart
 @export var standing_collision : CollisionShape3D
 @export var crouching_collision : CollisionShape3D
@@ -16,17 +17,24 @@ class_name PlayerController3D extends CharacterBody3D
 @export var deceleration : float = 0.5
 @export_group("Speed")
 @export var default_speed : float = 7.0
-@export var sprint_speed : float = 3.0
-@export var crouch_speed : float = -5.0
-@export_category("Jump Settings")
+@export var sprint_speed : float = 3.0 ## Amount of speed ADDED to the player's speed while sprinting.
+@export var crouch_speed : float = -5.0 ## Amount of speed SUBTRACTED from the player's speed while sprinting.
+@export_group("Jump Settings")
 @export var crouch_jump : bool = false ## Whether you can crouch jump like in Half-Life. Untested.
 @export var jump_velocity : float = 5.0
+@export var fall_velocity_threshold : float = -5.0 ## Minimum speed to trigger fall kick effect.
+
+@export_category("Data Helpers")
+@export var data_relative_velocity : Vector3
+
 
 var _input_dir : Vector2 = Vector2.ZERO
 var _movement_velocity : Vector3 = Vector3.ZERO
-var sprint_modifier : float = 0.0
-var crouch_modifier : float = 0.0
-var speed : float = 0.0
+var _sprint_modifier : float = 0.0
+var _crouch_modifier : float = 0.0
+var _speed : float = 0.0
+var _current_fall_velocity : float
+
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -34,15 +42,15 @@ func _physics_process(delta: float) -> void:
 	
 	
 	
-	var speed_modifier = sprint_modifier + crouch_modifier
-	speed = default_speed + speed_modifier
+	var speed_modifier = _sprint_modifier + _crouch_modifier
+	_speed = default_speed + speed_modifier
 	
 	_input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var current_velocity = Vector2(_movement_velocity.x, _movement_velocity.z)
 	var direction = (transform.basis * Vector3(_input_dir.x, 0, _input_dir.y)).normalized()
 	
 	if direction:
-		current_velocity = lerp(current_velocity, Vector2(direction.x, direction.z) * speed, acceleration)
+		current_velocity = lerp(current_velocity, Vector2(direction.x, direction.z) * _speed, acceleration)
 	else:
 		current_velocity = current_velocity.move_toward(Vector2.ZERO, deceleration)
 	
@@ -56,24 +64,34 @@ func _physics_process(delta: float) -> void:
 func update_rotation(rotation_input) -> void:
 	global_transform.basis = Basis.from_euler(rotation_input)
 
+
+func check_fall_speed() -> bool:
+	if _current_fall_velocity < fall_velocity_threshold:
+		_current_fall_velocity = 0.0
+		return true
+	else:
+		_current_fall_velocity = 0.0
+		return false
+
+
 #region State Functions
 # These are called ONCE when a state is entered.
 func sprint() -> void:
-	sprint_modifier = sprint_speed
+	_sprint_modifier = sprint_speed
 
 
 func walk() -> void:
-	sprint_modifier = 0.0
+	_sprint_modifier = 0.0
 
 
 func stand() -> void:
-	crouch_modifier = 0.0
+	_crouch_modifier = 0.0
 	standing_collision.disabled = false # I hate it when godot makes properties
 	crouching_collision.disabled = true # a double negative. -n
 	
 	
 func crouch() -> void:
-	crouch_modifier = crouch_speed
+	_crouch_modifier = crouch_speed
 	standing_collision.disabled = true
 	crouching_collision.disabled = false
 
