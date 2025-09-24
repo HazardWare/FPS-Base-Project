@@ -25,9 +25,10 @@ class_name CameraEffects extends Camera3D
 @export var ease_damage_kick : bool = true
 @export_subgroup("Weapon Recoil")
 @export var weapon_decay : float = 0.5
-@export_subgroup("Headbob")
-@export_range(0.0, 0.1, 0.001) var bob_pitch : float = 0.05
-@export_range(0.0, 0.1, 0.001) var bob_roll : float = 0.025
+@export_group("Headbob")
+@export_enum("DOOM", "DOOM_MODERN", "QUAKE_2") var bob_style : String = "DOOM_MODERN"
+@export_range(0.0, 0.1, 0.001) var bob_pitch : float = 0.15
+@export_range(0.0, 0.1, 0.001) var bob_roll : float = 0.3
 @export_range(0.0, 0.04, 0.001) var bob_up : float = 0.005
 @export_range(3.0, 8.0, 0.1) var bob_frequency : float = 6.0
 
@@ -107,6 +108,7 @@ func calculate_view_offset(delta : float) -> void:
 		angles += _weapon_kick_angles
 	
 	# Headbob
+	
 	if enable_headbob:
 		var pitch_delta = bob_sin * deg_to_rad(bob_pitch) * speed
 		angles.x -= pitch_delta
@@ -119,7 +121,10 @@ func calculate_view_offset(delta : float) -> void:
 
 	position = offset
 	rotation = angles
-	
+
+func handle_headbob() -> void:
+	pass
+
 
 func add_fall_kick(fall_strength : float):
 	_fall_value = deg_to_rad(fall_strength)
