@@ -11,34 +11,29 @@ extends Node3D
 @export_group("Actions")
 @export var primary_attack : Attack
 
-#plingar
+# WEAPON STATES:
+# FIRE : MAIN FIRE
+# FIRE_ALT : ALTERNATE FIRING MODE
+# RELOAD : SELF EXPLANATORY
+# RAISE : WHEN THE WEAPON IS UNHOLSTERED
+# LOWER : WHEN THE WEAPON IS HOLSTERED
 
-var CURRENT_STATE : WEAPON_STATES
+signal weapon_fire
+signal weapon_fire_alt
+signal weapon_reload
+signal weapon_raise
+signal weapon_lower
 
-enum WEAPON_STATES {
-	READY,
-	FIRE,
-	RAISE,
-	LOWER,
-	RELOAD
-}
-
-func weapon_process(delta: float) -> void:
-	match CURRENT_STATE:
-		WEAPON_STATES.READY:
-			weapon_ready()
-		WEAPON_STATES.FIRE:
-			weapon_fire()
-		WEAPON_STATES.RAISE:
-			weapon_raise()
-		WEAPON_STATES.LOWER:
-			weapon_lower()
-		WEAPON_STATES.RELOAD:
-			weapon_reload()
-
-
-func weapon_ready() -> void: push_error("State not defined: weapon_ready")
-func weapon_fire() -> void: push_error("State not defined: weapon_fire")
-func weapon_raise() -> void: push_error("State not defined: weapon_raise")
-func weapon_lower() -> void: push_error("State not defined: weapon_lower")
-func weapon_reload() -> void: push_error("State not defined: weapon_reload")
+# Called by parent WeaponController.
+func weapon_action(action : String):
+	match action:
+		"FIRE":
+			weapon_fire.emit()
+		"FIRE_ALT":
+			weapon_fire_alt.emit()
+		"RELOAD":
+			weapon_reload.emit()
+		"RAISE":
+			weapon_raise.emit()
+		"LOWER":
+			weapon_lower.emit()
