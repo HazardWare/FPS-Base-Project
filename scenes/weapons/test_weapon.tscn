@@ -1,7 +1,51 @@
-[gd_scene load_steps=2 format=3 uid="uid://cs3nvj4l1w475"]
+[gd_scene load_steps=6 format=3 uid="uid://cs3nvj4l1w475"]
 
-[ext_resource type="Script" uid="uid://dpv6nggyl4msw" path="res://scripts/nodedefs/weapon.gd" id="1_m0g08"]
+[ext_resource type="Script" uid="uid://4q5i8j8qlxb3" path="res://scenes/weapons/test_weapon.gd" id="1_m0g08"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m0g08"]
+size = Vector3(0.2, 0.2, 1)
+
+[sub_resource type="Animation" id="Animation_m0g08"]
+resource_name = "fire"
+length = 0.1
+step = 0.01
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 0.02, 1, 0, 0, 0.1, 0.099999994, 1, 0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_bq81q"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rrv11"]
+_data = {
+&"RESET": SubResource("Animation_bq81q"),
+&"fire": SubResource("Animation_m0g08")
+}
 
 [node name="Weapon" type="Node3D"]
 script = ExtResource("1_m0g08")
+weapon_name = "Test Weapon"
+weapon_full_name = "Springfield Cube Model 1"
 metadata/_custom_type_script = "uid://dpv6nggyl4msw"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_m0g08")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rrv11")
+}
+
+[connection signal="weapon_fire" from="." to="." method="_on_weapon_fire"]

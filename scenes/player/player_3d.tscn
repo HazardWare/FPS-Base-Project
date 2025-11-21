@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://c12vk534avtaq"]
+[gd_scene load_steps=27 format=3 uid="uid://c12vk534avtaq"]
 
 [ext_resource type="Script" uid="uid://cstsgbjhy8wvs" path="res://scenes/player/camera_controller.gd" id="1_hdvuw"]
 [ext_resource type="Script" uid="uid://b8si164r6t21b" path="res://scenes/player/components/mouse_capture_component.gd" id="1_w63ml"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://c1vp0ojjvaby1" path="res://addons/godot_state_charts/parallel_state.gd" id="5_e0hk1"]
 [ext_resource type="Script" uid="uid://jg6auahbta6v" path="res://scenes/player/weapon_controller.gd" id="5_q2hxo"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="6_xhbws"]
+[ext_resource type="PackedScene" uid="uid://cs3nvj4l1w475" path="res://scenes/weapons/test_weapon.tscn" id="6_yc5pu"]
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="7_vl62o"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="8_t3cmh"]
 [ext_resource type="Script" uid="uid://bi8518gxajdix" path="res://scenes/player/statemachine/state_machine.gd" id="9_8tj8l"]
@@ -39,8 +40,10 @@ standing_collision = NodePath("StandingCollision")
 crouching_collision = NodePath("CrouchingCollision")
 crouch_check = NodePath("CrouchChecker")
 interaction_raycast = NodePath("CameraController/Camera3D/InteractionRaycast")
+jump_velocity = 4.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("CapsuleMesh_vw6wi")
 
 [node name="StandingCollision" type="CollisionShape3D" parent="."]
@@ -70,9 +73,11 @@ target_position = Vector3(0, 0, -3)
 collide_with_areas = true
 script = ExtResource("4_blo27")
 
-[node name="WeaponController" type="Node3D" parent="CameraController/Camera3D" node_paths=PackedStringArray("current_weapon")]
+[node name="WeaponController" type="Node3D" parent="CameraController/Camera3D"]
 script = ExtResource("5_q2hxo")
-current_weapon = NodePath("")
+
+[node name="Weapon" parent="CameraController/Camera3D/WeaponController" instance=ExtResource("6_yc5pu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.49415416, -0.9318294)
 
 [node name="CrouchChecker" type="ShapeCast3D" parent="."]
 shape = SubResource("SphereShape3D_j4jgq")

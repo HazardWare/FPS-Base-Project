@@ -38,4 +38,4 @@ func update_camera_rotation(input: Vector2) -> void:
 func update_camera_height(delta: float, direction: int) -> void:
 	if position.y >= crouch_offset and position.y <= DEFAULT_HEIGHT:
 		position.y = clampf(position.y + (crouch_speed * direction) * delta, crouch_offset, DEFAULT_HEIGHT)
-	print(position.y)
+	#print(position.y)

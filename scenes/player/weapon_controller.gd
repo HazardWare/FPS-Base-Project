@@ -4,5 +4,5 @@ extends Node3D
 
 func _physics_process(delta: float) -> void:
 	# Primary Fire
-	if Input.is_action_just_pressed("fire_primary"):
-		current_weapon.weapon_action("FIRE")
+	if Input.is_action_just_pressed("fire"):
+		get_child(0).weapon_action("FIRE")

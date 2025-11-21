@@ -20,7 +20,7 @@ class_name PlayerController3D extends CharacterBody3D
 @export var sprint_speed : float = 3.0 ## Amount of speed ADDED to the player's speed while sprinting.
 @export var crouch_speed : float = -5.0 ## Amount of speed SUBTRACTED from the player's speed while sprinting.
 @export_group("Jump Settings")
-@export var crouch_jump : bool = false ## Whether you can crouch jump like in Half-Life. Untested.
+#@export var crouch_jump : bool = false
 @export var jump_velocity : float = 5.0
 @export var fall_velocity_threshold : float = -5.0 ## Minimum speed to trigger fall kick effect.
 
